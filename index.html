@@ -402,6 +402,7 @@ html:not(.authed) .fab{display:none}
         <button class="today-btn" id="todayM" hidden>Today</button>
       </div>
     </div>
+    <div class="banner" style="background:var(--warn-soft)"><b>We've moved.</b> The ledger now lives at <a href="https://gabrielmjocsoniv-ux.github.io/bt-ledger/" style="color:var(--royal);font-weight:700">gabrielmjocsoniv-ux.github.io/bt-ledger</a>. Log new entries there; this copy is no longer updated.</div>
     <div class="banner" id="status" hidden></div>
 
     <!-- HOME -->
@@ -770,12 +771,15 @@ function insights(k){
 function renderHome(){
   const k=S.month, T=totals(k), NW=nwTotals(), pf=paceFrac(k);
   const snaps=[...S.snaps].sort((a,b)=>a.month.localeCompare(b.month));
-  const prev=[...snaps].reverse().find(s=>s.month<THIS_MONTH); const ch=prev?NW.net-prev.net:null;
+  const past=k<THIS_MONTH, snapK=past?snaps.find(s=>s.month===k):null;
+  const nwVal=past?(snapK?snapK.net:null):NW.net, refMonth=past?k:THIS_MONTH;
+  const prev=[...snaps].reverse().find(s=>s.month<refMonth); const ch=(prev&&nwVal!==null)?nwVal-prev.net:null;
+  const nwLabel=past?`Net worth, end of ${mLabel(k)}`:k>THIS_MONTH?"Net worth today":"Combined net worth";
   const rate=T.inc>0?T.saved/T.inc:null, ae=avgExpense(), runway=S.accounts.length&&ae>0?liquid()/ae:null;
   const budget=sum(expCats(),c=>c.amount);
-  $("hero").innerHTML=`<div class="hero-top"><div><div class="eyebrow">Combined net worth</div><div class="big"><small>₱</small>${Math.round(NW.net).toLocaleString("en-PH")}</div>
-    ${ch!==null?`<div class="delta">${Math.abs(ch)<1000?"No change":`${ch>=0?"▲":"▼"} ${peso(Math.abs(ch))}`} since ${mLabel(prev.month,true)}</div>`:S.accounts.length?`<div class="delta">Tracking starts this month</div>`:`<div class="delta" style="cursor:pointer" data-go="networth">Add your accounts to begin →</div>`}</div>
-    ${sparkSVG(snaps.map(s=>s.net))}</div>
+  $("hero").innerHTML=`<div class="hero-top"><div><div class="eyebrow">${nwLabel}</div><div class="big">${nwVal===null?`<span style="font-size:.5em">Not tracked yet</span>`:`<small>₱</small>${Math.round(nwVal).toLocaleString("en-PH")}`}</div>
+    ${past&&!snapK?`<div class="delta">Tracking starts ${snaps[0]?mLabel(snaps[0].month):"later"}</div>`:ch!==null?`<div class="delta">${Math.abs(ch)<1000?"No change":`${ch>=0?"▲":"▼"} ${peso(Math.abs(ch))}`} since ${mLabel(prev.month,true)}</div>`:S.accounts.length?`<div class="delta">Tracking starts this month</div>`:`<div class="delta" style="cursor:pointer" data-go="networth">Add your accounts to begin →</div>`}</div>
+    ${sparkSVG(snaps.filter(s=>s.month<=(past?k:"9999")).map(s=>s.net).concat(past?[]:[]))}</div>
     <div class="hero-stats">
       <div><label>${mLabel(k,true)} income</label><b>${peso(T.inc)}</b><small>${T.tx.filter(t=>!isExp(t)).length} entries</small></div>
       <div><label>${mLabel(k,true)} spent</label><b>${peso(T.exp)}</b><small>${budget?`${pct(T.exp/budget)} of budget`:"no budget set"}</small></div>
