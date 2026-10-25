@@ -301,6 +301,21 @@ input[type=range]{padding:0;border:0;background:transparent;accent-color:var(--r
 .ccell .ch{display:flex;justify-content:space-between;gap:8px;font-size:.84rem;font-weight:600}
 .ccell .ch .n{display:flex;gap:6px;align-items:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .msp{height:40px}
+.cmprow{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr) 92px;gap:12px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line);border-radius:8px}
+.cmprow:hover{background:var(--sunk)}
+.cmprow .n{display:flex;gap:8px;align-items:center;font-weight:600;font-size:.86rem;min-width:0}
+.cmprow .n span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmpbars{display:grid;gap:4px}
+.cmpbars div{height:9px;border-radius:99px}
+.cmprow .chg{text-align:right;font-weight:700;font-size:.84rem;white-space:nowrap}
+.cmphead{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px;margin-bottom:14px}
+.cmphead div{background:var(--sunk);border-radius:12px;padding:12px 14px}
+.cmphead label{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+.cmphead b{display:block;font-family:var(--serif);font-weight:400;font-size:1.5rem;margin-top:2px}
+.cmphead small{color:var(--muted);font-size:.78rem}
+@media (max-width:560px){.cmprow{grid-template-columns:minmax(0,1fr) 80px}.cmprow .cmpbars{grid-column:1/-1;grid-row:2}}
+.patwins{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.patwins .seg button{padding:7px 12px}
 /* planner */
 .bpg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
 .bpc{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--surface);min-width:0}
@@ -402,7 +417,6 @@ html:not(.authed) .fab{display:none}
         <button class="today-btn" id="todayM" hidden>Today</button>
       </div>
     </div>
-    <div class="banner" style="background:var(--warn-soft)"><b>We've moved.</b> The ledger now lives at <a href="https://gabrielmjocsoniv-ux.github.io/bt-ledger/" style="color:var(--royal);font-weight:700">gabrielmjocsoniv-ux.github.io/bt-ledger</a>. Log new entries there; this copy is no longer updated.</div>
     <div class="banner" id="status" hidden></div>
 
     <!-- HOME -->
@@ -439,14 +453,19 @@ html:not(.authed) .fab{display:none}
 
     <!-- PATTERNS -->
     <section data-tab="patterns">
-      <div class="ph" style="margin:0"><span id="patSpan" class="note"></span><div class="seg" id="patWin" style="width:auto"><button type="button" data-w="6">6 months</button><button type="button" data-w="12">12 months</button><button type="button" data-w="24">2 years</button><button type="button" data-w="0">All time</button></div></div>
+      <div class="ph" style="margin:0"><span id="patSpan" class="note"></span><div class="patwins"><div class="seg" id="patYears" style="width:auto"></div><div class="seg" id="patWin" style="width:auto"><button type="button" data-w="6">6M</button><button type="button" data-w="12">12M</button><button type="button" data-w="24">2Y</button><button type="button" data-w="0">All</button></div></div></div>
       <div class="kpis" id="patKpis"></div>
+      <div class="g">
+        <div class="panel c5"><div class="ph"><h2>Where the money went</h2><span id="patPieSub">tap a category</span></div><div id="patPie"></div></div>
+        <div class="panel c7"><div class="ph"><h2>Year over year</h2><div class="seg" id="patYoyMode" style="width:auto"><button type="button" data-m="all">All in</button><button type="button" data-m="every">Everyday</button><button type="button" data-m="cum">Running total</button></div></div><div id="patYoy"></div></div>
+        <div class="panel c12"><div class="ph"><h2>Then vs now</h2><div class="seg" id="patCmp" style="width:auto"><button type="button" data-c="prev">vs period before</button><button type="button" data-c="ly">vs same months last year</button></div></div><div id="patCmpOut"></div></div>
+      </div>
       <div class="panel"><div class="ph"><h2>What we noticed</h2><span>updates with every entry</span></div><div class="insights" id="patIns"></div></div>
       <div class="g">
         <div class="panel c6"><div class="ph"><h2>By day of week</h2><span>average per day, items under ₱20k</span></div><div id="patWeek"></div></div>
         <div class="panel c6"><div class="ph"><h2>Through the year</h2><span>average by calendar month, all history</span></div><div id="patSeason"></div></div>
-        <div class="panel c12"><div class="ph"><h2>Category trends</h2><span>last 12 months · arrow compares last 3 full months to the 3 before</span></div><div id="patCats"></div></div>
-        <div class="panel c7"><div class="ph"><h2>Needs vs wants</h2><span>last 12 months</span></div><div id="patNW"></div></div>
+        <div class="panel c12"><div class="ph"><h2>Category trends</h2><span id="patCatsSub">last 12 months · arrow compares last 3 full months to the 3 before</span></div><div id="patCats"></div></div>
+        <div class="panel c7"><div class="ph"><h2>Needs vs wants</h2><span id="patNWSub">last 12 months</span></div><div id="patNW"></div></div>
         <div class="panel c5"><div class="ph"><h2>Payday effect</h2><span>everyday spending by cutoff</span></div><div id="patCut"></div>
           <div class="ph" style="margin-top:22px"><h2>Where it goes most</h2><span>by item</span></div><div id="patTop"></div></div>
       </div>
@@ -1261,13 +1280,16 @@ function fillRecCats(){ const t=$("rType").value, sel=$("bCat"), v=sel.value; co
 function syncRecForm(){ const f=$("rFreq").value; $("rDay2F").hidden=f!=="semimonthly"; $("rMonthF").hidden=f!=="yearly"; $("rDayF").hidden=f==="weekly"||f==="biweekly"; $("rDayL").textContent=f==="semimonthly"?"First day":"Day of month"; }
 
 /* ================= PATTERNS ================= */
-S.patWin=12;
+S.patWin="ytd";
 const BIG=20000;
 const medianOf=a=>{ const s=[...a].sort((x,y)=>x-y); if(!s.length) return 0; const m=Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; };
 const normItem=s=>String(s||"").toLowerCase().replace(/[0-9₱.,()\/#&+\-:']+/g," ").replace(/\s+/g," ").trim().split(" ").slice(0,2).join(" ");
 const isNeed=t=>t.nw?t.nw==="Need":((expCats().find(c=>c.name===t.category)||{}).kind==="need");
-function patMonths(){ const first=S.txns.reduce((a,t)=>t.date&&t.date<a?t.date:a,"9999").slice(0,7); const out=[]; let k=THIS_MONTH;
-  for(let i=0;i<(S.patWin||600);i++){ out.push(k); if(k<=first) break; k=shiftMonth(k,-1); } return out.reverse(); }
+const patYear=()=>S.patWin==="ytd"?+THIS_MONTH.slice(0,4):String(S.patWin).startsWith("y")?+String(S.patWin).slice(1):null;
+function patMonths(){ const first=S.txns.reduce((a,t)=>t.date&&t.date<a?t.date:a,"9999").slice(0,7); const yr=patYear();
+  if(yr){ const out=[]; for(let m=1;m<=12;m++){ const k=`${yr}-${pad(m)}`; if(k>THIS_MONTH) break; if(k>=first) out.push(k); } return out.length?out:[`${yr}-01`]; }
+  const out=[]; let k=THIS_MONTH; const n=+S.patWin||600;
+  for(let i=0;i<n;i++){ out.push(k); if(k<=first) break; k=shiftMonth(k,-1); } return out.reverse(); }
 function barChart({vals,labels,colors,tips,W=520,H=200,fmt=pesoK,hiIdx=-1}){
   const L=48,R=8,T=10,B=24,n=vals.length,cw=(W-L-R)/n,bw=Math.min(34,cw*.62),hi=niceMax(Math.max(...vals,1)),y=v=>T+(H-T-B)*(1-v/hi);
   let g=""; for(let i=0;i<=3;i++){const v=hi*i/3; g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${fmt(v)}</text>`;}
@@ -1281,22 +1303,86 @@ function miniSpark(vals,labels,color){
   const hov=vals.map((v,i)=>`<rect class="hov" x="${x(i)-step/2}" y="0" width="${step}" height="${H}" data-gx="${x(i)}" data-tip="${ta(tipHead(mLabel(labels[i]))+tipRow(color,"Spent",peso(v)))}"/>`).join("");
   return `<svg class="chart msp" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polygon points="${x(0)},${H} ${pts} ${x(n-1)},${H}" fill="${color}" opacity=".14"/><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><line class="guide" x1="0" x2="0" y1="0" y2="${H}" style="opacity:0"/>${hov}</svg>`;
 }
+S.patSel=null; S.yoyMode="all"; S.cmpMode="prev";
+function multiLine({series,labels,W=640,H=240,fmt=pesoK}){
+  const L=56,R=14,T=12,B=26,n=labels.length,vals=series.flatMap(s=>s.v.filter(v=>v!=null));
+  const hi=niceMax(Math.max(...vals,1)), x=i=>L+(W-L-R)*i/(n-1), y=v=>T+(H-T-B)*(1-v/hi);
+  let g=""; for(let i=0;i<=4;i++){const v=hi*i/4; g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${fmt(v)}</text>`;}
+  const xl=labels.map((l,i)=>`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${esc(l)}</text>`).join("");
+  const lines=series.map(s=>{ const pts=s.v.map((v,i)=>v==null?null:`${x(i)},${y(v)}`).filter(Boolean).join(" "); const lastI=s.v.reduce((a,v,i)=>v==null?a:i,-1);
+    return `<polyline points="${pts}" fill="none" stroke="${s.c}" stroke-width="${s.w||2}" stroke-linejoin="round" stroke-linecap="round" opacity="${s.o||1}"/>${lastI>=0?`<circle cx="${x(lastI)}" cy="${y(s.v[lastI])}" r="${s.w>2?4.5:3}" fill="${s.c}"/>`:""}`; }).join("");
+  const step=(W-L-R)/(n-1);
+  const hov=labels.map((l,i)=>`<rect class="hov" x="${Math.max(L,x(i)-step/2)}" y="${T}" width="${step}" height="${H-T-B}" data-gx="${x(i)}" data-tip="${ta(tipHead(esc(l))+series.filter(s=>s.v[i]!=null).map(s=>tipRow(s.c,esc(s.n),peso(s.v[i]))).join(""))}"/>`).join("");
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${g}${lines}${xl}<line class="guide" x1="0" x2="0" y1="${T}" y2="${H-B}"/>${hov}</svg>`;
+}
+function renderPatCharts(months){
+  const mset=new Set(months), ex=S.txns.filter(t=>isExp(t)&&mset.has(String(t.date).slice(0,7))), total=sum(ex,t=>t.amount);
+  // pie
+  const by={}; ex.forEach(t=>{ by[t.category||"Uncategorized"]=(by[t.category||"Uncategorized"]||0)+t.amount; });
+  const arr=Object.entries(by).sort((a,b)=>b[1]-a[1]), top=arr.slice(0,8), rest=sum(arr.slice(8),x=>x[1]);
+  const segs=top.map(([k,v])=>({k,v,c:catColor(k)})); if(rest) segs.push({k:"Others",v:rest,c:"#9AA3BF"});
+  const sel=segs.find(x=>x.k===S.patSel), nFull=months.filter(m=>m<THIS_MONTH).length||1;
+  $("patPie").innerHTML=total?`<div class="donut-wrap">${donutSVG(segs,{center:sel?pesoK(sel.v):pesoK(total),sub:sel?sel.k:"total spent",sel:S.patSel})}
+    <div class="legend">${segs.map(x=>`<button data-patsel="${esc(x.k)}" aria-pressed="${S.patSel===x.k}" data-tip="${ta(tipHead(esc(x.k))+tipRow(x.c,"Total",peso(x.v))+tipRow(x.c,"Share",pct(x.v/total,1))+tipRow(x.c,"Per month",peso(x.v/Math.max(1,months.length))))}"><span class="dot" style="background:${x.c}"></span><span class="nm">${esc(x.k)}</span><b>${pesoK(x.v)}</b><span class="pc">${pct(x.v/total)}</span></button>`).join("")}</div></div>`:`<p class="note">No spending in this period.</p>`;
+  // year over year
+  document.querySelectorAll("#patYoyMode button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===S.yoyMode));
+  const allEx=S.txns.filter(isExp), years=[...new Set(allEx.map(t=>t.date.slice(0,4)).filter(y=>/^20\d\d$/.test(y)&&y<=THIS_MONTH.slice(0,4)))].sort();
+  const first=allEx.reduce((a,t)=>t.date<a?t.date:a,"9999").slice(0,7), cy=THIS_MONTH.slice(0,4), ycol={0:"var(--royal)",1:"var(--gold)",2:"var(--joint)",3:"var(--tintin)",4:"var(--faint)"};
+  const ser=years.map(y=>{ let run=0; const v=Array.from({length:12},(_,i)=>{ const k=`${y}-${pad(i+1)}`; if(k<first||k>THIS_MONTH) return null; let m=sum(allEx.filter(t=>t.date.startsWith(k)&&(S.yoyMode!=="every"||t.amount<BIG)),t=>t.amount); if(S.yoyMode==="cum"){ run+=m; return run; } return m; });
+    const age=+cy-+y; return {n:y,v,c:ycol[Math.min(age,4)],w:age===0?3.2:1.8,o:age>3?.6:1}; }).reverse();
+  $("patYoy").innerHTML=multiLine({series:ser,labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]})+
+    `<div class="chart-legend">${ser.map(s=>`<span><i style="background:${s.c}"></i>${s.n}${s.n===cy?" (so far)":""}</span>`).join("")}<span>${S.yoyMode==="every"?"items under ₱20k only":S.yoyMode==="cum"?"spending added up through the year":"every expense"}</span></div>`;
+  // then vs now
+  document.querySelectorAll("#patCmp button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.c===S.cmpMode));
+  const Af0=months.filter(m=>m<THIS_MONTH), Af=Af0.length?Af0:months, shiftN=S.cmpMode==="ly"?12:Math.max(1,Af.length);
+  const pairs=Af.map(m=>[m,shiftMonth(m,-shiftN)]).filter(([,b])=>b>=first);
+  const Aset=new Set(pairs.map(p=>p[0])), Bset=new Set(pairs.map(p=>p[1])), Bfull=[...Bset];
+  if(!Bfull.length){ $("patCmpOut").innerHTML=`<p class="note">There's no earlier data to compare this period with. Try a shorter window or a later year.</p>`; return; }
+  const lab=ms=>{ const a=[...ms].sort(); return a.length===1?`${mLabel(a[0],true)} ’${a[0].slice(2,4)}`:`${mLabel(a[0],true)} ’${a[0].slice(2,4)} to ${mLabel(a[a.length-1],true)} ’${a[a.length-1].slice(2,4)}`; };
+  const exA=allEx.filter(t=>Aset.has(t.date.slice(0,7))), exB=allEx.filter(t=>Bset.has(t.date.slice(0,7))), nA=Aset.size, nB=Bset.size;
+  const avg=(l,n,f)=>sum(l.filter(f||(()=>true)),t=>t.amount)/n, med=(l,ms)=>medianOf([...ms].map(m=>sum(l.filter(t=>t.date.startsWith(m)&&t.amount<BIG),t=>t.amount)));
+  const chg=(a,b)=>b?`<span class="${a>b?"neg":"pos"}">${a>b?"▲":"▼"} ${pct(Math.abs(a-b)/b)}</span>`:"";
+  const aA=avg(exA,nA), aB=avg(exB,nB), eA=med(exA,Aset), eB=med(exB,Bset), wA=nA?avg(exA,nA,t=>!isNeed(t)):0, wB=avg(exB,nB,t=>!isNeed(t));
+  const GRP=[["Eating out & dates",["Food & Drink","Dates & Activities","Friends"],"#E2A23B"],["Getting around",["Terrie","Other Transport"],"#3BA7E0"],["Home & bills",["Bills","Groceries","Housing","Utilities","Household Help"],"#0E9C88"],["Health & personal care",["Health","Beauty","Personal Care","Health & Medical"],"#C23F8B"],["Shopping",["Shopping"],"#7B5CF0"],["Travel",["Travel"],"#2F55E4"],["Celebrations & gifts",["BT Celebrations","Gifts","Giving","Family & Gifts","Wedding"],"#E2604F"],["Business",["Business"],"#8DA22F"]];
+  const grpOf=c=>{ const g=GRP.find(g=>g[1].includes(c)); return g?g[0]:"Other"; };
+  const gcol=n=>(GRP.find(g=>g[0]===n)||[0,0,"#9AA3BF"])[2];
+  const cats=[...GRP.map(g=>g[0]),"Other"].map(c=>({c,a:avg(exA,nA,t=>grpOf(t.category)===c),b:avg(exB,nB,t=>grpOf(t.category)===c),inc:c==="Other"?"Miscellaneous and anything else":(GRP.find(g=>g[0]===c)[1].join(", "))})).filter(x=>x.a>=200||x.b>=200).sort((x,y)=>Math.max(y.a,y.b)-Math.max(x.a,x.b));
+  const mx=Math.max(1,...cats.map(x=>Math.max(x.a,x.b)));
+  $("patCmpOut").innerHTML=`<div class="cmphead">
+      <div><label>Now · ${lab(Aset)}</label><b>${peso(aA)}</b><small>a month, all in</small></div>
+      <div><label>Then · ${lab(Bset)}</label><b>${peso(aB)}</b><small>a month, all in · now ${chg(aA,aB)}</small></div>
+      <div><label>Everyday baseline</label><b>${peso(eA)}</b><small>was ${peso(eB)} · ${chg(eA,eB)}</small></div>
+      <div><label>Wants per month</label><b>${peso(wA)}</b><small>was ${peso(wB)} · ${chg(wA,wB)}</small></div></div>
+    <div class="chart-legend" style="margin:0 0 6px"><span><i style="background:var(--royal)"></i>Now, per month</span><span><i style="background:var(--faint)"></i>Then, per month</span><span>full months only · grouped so older categories compare fairly</span></div>
+    ${cats.map(x=>`<div class="cmprow" data-tip="${ta(tipHead(esc(x.c),esc(x.inc))+tipRow("var(--royal)","Now",peso(x.a)+" / mo")+tipRow("var(--faint)","Then",peso(x.b)+" / mo")+tipRow("transparent","Difference",`${x.a>=x.b?"+":"−"}${peso(Math.abs(x.a-x.b))} / mo`))}"><span class="n"><span class="dot" style="background:${gcol(x.c)}"></span><span>${esc(x.c)}</span></span>
+      <div class="cmpbars"><div style="width:${x.a/mx*100}%;background:var(--royal)"></div><div style="width:${x.b/mx*100}%;background:var(--faint);opacity:.6"></div></div>
+      <span class="chg">${x.b?`<span class="${x.a>x.b?"neg":"pos"}">${x.a>x.b?"▲":"▼"} ${x.a>=3*x.b?(x.a/x.b).toFixed(1)+"×":pct(Math.abs(x.a-x.b)/x.b)}</span>`:`<span class="note">new</span>`}</span></div>`).join("")}`;
+}
+document.addEventListener("click",e=>{ const p=e.target.closest("[data-patsel]"); if(p){ S.patSel=S.patSel===p.dataset.patsel?null:p.dataset.patsel; renderPatterns(); return; }
+  const y=e.target.closest("#patYoyMode button"); if(y){ S.yoyMode=y.dataset.m; renderPatterns(); return; }
+  const c=e.target.closest("#patCmp button"); if(c){ S.cmpMode=c.dataset.c; renderPatterns(); } });
 function renderPatterns(){
-  document.querySelectorAll("#patWin button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.w===S.patWin));
+  { const ys=[...new Set(S.txns.filter(isExp).map(t=>String(t.date).slice(0,4)).filter(y=>/^20\d\d$/.test(y)&&y<=THIS_MONTH.slice(0,4)))].sort().reverse(); const cy=THIS_MONTH.slice(0,4);
+    $("patYears").innerHTML=ys.map(y=>y===cy?`<button type="button" data-w="ytd">${y} YTD</button>`:`<button type="button" data-w="y${y}">${y}</button>`).join(""); }
+  document.querySelectorAll("#patYears button,#patWin button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.w)===String(S.patWin)));
   const months=patMonths(), mset=new Set(months);
   const ex=S.txns.filter(t=>isExp(t)&&mset.has(String(t.date).slice(0,7)));
   if(!ex.length){ ["patKpis","patIns","patWeek","patCut","patSeason","patCats","patTop","patNW"].forEach(id=>$(id).innerHTML=""); $("patIns").innerHTML=`<div class="empty"><b>Not enough history yet</b>Patterns appear once there are a few weeks of entries.</div>`; return; }
+  renderPatCharts(months);
   const span=`${mLabel(months[0],true)} ’${months[0].slice(2,4)} to ${mLabel(months[months.length-1],true)} ’${months[months.length-1].slice(2,4)}`;
   $("patSpan").textContent=span;
   const total=sum(ex,t=>t.amount), big=ex.filter(t=>t.amount>=BIG), small=ex.filter(t=>t.amount<500);
   const full=months.filter(m=>m<THIS_MONTH);
   const mt=full.map(m=>{ const l=ex.filter(t=>t.date.startsWith(m)); return {m,all:sum(l,t=>t.amount),every:sum(l.filter(t=>t.amount<BIG),t=>t.amount)}; });
   const baseline=medianOf(mt.map(x=>x.every)), avgAll=mt.length?sum(mt,x=>x.all)/mt.length:0;
-  const Y=+TODAY.slice(0,4), md=TODAY.slice(5);
+  const selY=patYear(), Y=selY||+TODAY.slice(0,4), curY=Y===+TODAY.slice(0,4), md=curY?TODAY.slice(5):"12-31";
   const ytd=sum(S.txns.filter(t=>isExp(t)&&t.date.slice(0,4)===String(Y)&&t.date.slice(5)<=md),t=>t.amount), lytd=sum(S.txns.filter(t=>isExp(t)&&t.date.slice(0,4)===String(Y-1)&&t.date.slice(5)<=md),t=>t.amount);
+  const lyHas=S.txns.some(t=>isExp(t)&&t.date.slice(0,4)===String(Y-1)&&t.date.slice(5,7)<=months[0].slice(5,7));
   const bigShare=total?sum(big,t=>t.amount)/total:0;
   $("patKpis").innerHTML=kpi("Everyday baseline",peso(baseline),`typical month without ₱20k+ items`)+kpi("Average month, all in",peso(avgAll),`over ${mt.length} full months`)+
-    kpi("Big-ticket share",pct(bigShare),`${big.length} items of ₱20k or more`)+kpi(`${Y} so far`,peso(ytd),lytd?`<span class="${ytd>lytd?"neg":"pos"}">${ytd>lytd?"▲":"▼"} ${pct(Math.abs(ytd-lytd)/lytd)}</span> vs same point in ${Y-1}`:"no prior year to compare");
+    kpi("Big-ticket share",pct(bigShare),`${big.length} items of ₱20k or more`)+kpi(curY?`${Y} so far`:`${Y} total`,peso(ytd),lytd&&lyHas?`<span class="${ytd>lytd?"neg":"pos"}">${ytd>lytd?"▲":"▼"} ${pct(Math.abs(ytd-lytd)/lytd)}</span> vs ${curY?"same point in ":""}${Y-1}`:"no prior year to compare");
+  const winLabel=selY?(curY?`${Y} so far`:`${Y}`):"last 12 months";
+  $("patCatsSub").textContent=`${winLabel} · arrow compares the last 3 full months to the 3 before`; $("patNWSub").textContent=winLabel;
 
   // weekday
   const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], wt=Array(7).fill(0), wc=Array(7).fill(0), wn=Array(7).fill(0);
@@ -1322,7 +1408,7 @@ function renderPatterns(){
   const ct=cats.map(c=>{ const series=last12.map(m=>sum(ex.filter(t=>t.category===c&&t.date.startsWith(m)),t=>t.amount)); const fullS=last12.map((m,i)=>m<THIS_MONTH?series[i]:null).filter(v=>v!==null);
     const a=fullS.slice(-3), b=fullS.slice(-6,-3); const ra=a.length?sum(a,x=>x)/a.length:0, rb=b.length?sum(b,x=>x)/b.length:0;
     return {c,series,tot:sum(ex.filter(t=>t.category===c),t=>t.amount),ch:rb?(ra-rb)/rb:null,ra,rb}; }).sort((a,b)=>b.tot-a.tot);
-  $("patCats").innerHTML=`<div class="cgrid">${ct.map(x=>`<div class="ccell"><div class="ch"><span class="n"><span class="dot" style="background:${catColor(x.c)}"></span>${esc(x.c)}</span>${x.ch===null?"":`<span class="${x.ch>0.15?"neg":x.ch<-0.15?"pos":"note"}">${x.ch>0?"▲":"▼"} ${pct(Math.abs(x.ch))}</span>`}</div>${miniSpark(x.series,last12,catColor(x.c))}<div class="note">${peso(x.tot)} · ${pct(x.tot/total)} of spending</div></div>`).join("")}</div>`;
+  $("patCats").innerHTML=`<div class="cgrid">${ct.map(x=>`<div class="ccell"><div class="ch"><span class="n"><span class="dot" style="background:${catColor(x.c)}"></span>${esc(x.c)}</span>${x.ch===null?"":`<span class="${x.ch>0.15?"neg":x.ch<-0.15?"pos":"note"}">${x.ch>0?"▲":"▼"} ${x.ch>=2?(1+x.ch).toFixed(1)+"×":pct(Math.abs(x.ch))}</span>`}</div>${miniSpark(x.series,last12,catColor(x.c))}<div class="note">${peso(x.tot)} · ${pct(x.tot/total)} of spending</div></div>`).join("")}</div>`;
 
   // top items
   const grp={}; ex.forEach(t=>{ const k=normItem(t.note)||("("+t.category+")"); (grp[k]=grp[k]||{n:t.note||t.category,c:0,t:0,cat:t.category}); grp[k].c++; grp[k].t+=t.amount; });
@@ -1347,11 +1433,11 @@ function renderPatterns(){
   ins.push({tone:wpeak>=4?"watch":"info",t:`${dfull[wpeak]}s are your priciest day`,b:`About ${peso(wavg[wpeak])} per ${dfull[wpeak]} versus ${peso(sum(wavg,x=>x)/7)} on an average day, counting everyday items under ₱20k.`});
   if(c1/cs>0.6||c2/cs>0.6) ins.push({tone:"watch",t:`${pct(Math.max(c1,c2)/cs)} lands in the ${c1>c2?"first":"second"} half of the month`,b:`Spending bunches up right after ${c1>c2?"the start of the month":"the 15th"}. Spreading big buys across both cutoffs keeps cash flow smoother.`});
   ins.push({tone:"info",t:`${mfull[top2[0]]} and ${mfull[top2[1]]} run hottest`,b:`Historically your two most expensive months. Setting money aside a few months ahead keeps them from denting investments.`});
-  if(lytd) ins.push({tone:ytd>lytd?"watch":"good",t:`${Y} is ${ytd>lytd?"ahead of":"behind"} ${Y-1}`,b:`${peso(ytd)} spent so far vs ${peso(lytd)} by this date last year (${ytd>lytd?"+":"−"}${pct(Math.abs(ytd-lytd)/lytd)}).`});
-  const tb=sum(expCats(),c=>c.amount); if(tb){ const yrs=full.filter(m=>m.startsWith(String(Y))); const under=yrs.filter(m=>sum(ex.filter(t=>t.date.startsWith(m)),t=>t.amount)<=tb).length; if(yrs.length) ins.push({tone:under/yrs.length>=0.6?"good":"watch",t:`Within budget ${under} of ${yrs.length} months this year`,b:`Measured against your ${peso(tb)} monthly plan.`}); }
+  if(lytd&&lyHas) ins.push({tone:ytd>lytd?"watch":"good",t:`${Y} ${curY?"is":"was"} ${ytd>lytd?"above":"below"} ${Y-1}`,b:curY?`${peso(ytd)} spent so far vs ${peso(lytd)} by this date last year (${ytd>lytd?"+":"−"}${pct(Math.abs(ytd-lytd)/lytd)}).`:`${peso(ytd)} for the year vs ${peso(lytd)} in ${Y-1} (${ytd>lytd?"+":"−"}${pct(Math.abs(ytd-lytd)/lytd)}).`});
+  const tb=sum(expCats(),c=>c.amount); if(tb&&Y>=2026){ const yrs=full.filter(m=>m.startsWith(String(Y))); const under=yrs.filter(m=>sum(ex.filter(t=>t.date.startsWith(m)),t=>t.amount)<=tb).length; if(yrs.length) ins.push({tone:under/yrs.length>=0.6?"good":"watch",t:`Within budget ${under} of ${yrs.length} months ${curY?"this year":"in "+Y}`,b:`Measured against your ${peso(tb)} monthly plan.`}); }
   $("patIns").innerHTML=ins.map(i=>`<div class="ins ${i.tone}"><span class="tag">${{good:"Good",watch:"Watch",alert:"Act",info:"Note"}[i.tone]}</span><b>${esc(i.t)}</b><p>${esc(i.b)}</p></div>`).join("");
 }
-document.addEventListener("click",e=>{ const b=e.target.closest("#patWin button"); if(b){ S.patWin=+b.dataset.w; renderPatterns(); } });
+document.addEventListener("click",e=>{ const b=e.target.closest("#patWin button,#patYears button"); if(b){ const w=b.dataset.w; S.patWin=/^\d+$/.test(w)?+w:w; renderPatterns(); } });
 
 /* ================= SHARED FINANCE MATH ================= */
 const amortPmt=(P,ratePct,n)=>{ if(P<=0||n<=0) return 0; const r=ratePct/1200; return r?P*r/(1-Math.pow(1+r,-n)):P/n; };
