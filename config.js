@@ -1,5 +1,5 @@
-// Supabase project settings. The anon key is designed to be public; access is protected by login + row-level security.
+// Supabase project settings. The publishable key is designed to be public; access is protected by login + row-level security.
 window.LEDGER_CONFIG = {
-  url: "SUPABASE_URL_HERE",
-  anonKey: "SUPABASE_ANON_KEY_HERE"
+  url: "https://gcblrkwmjggfsjvwazny.supabase.co",
+  anonKey: "sb_publishable_Mc4La0tlBRS6O-xiFJE0hw_1awkbUL8"
 };
