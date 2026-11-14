@@ -698,7 +698,7 @@ const EXP_DEFAULT = [["Housing","need"],["Utilities","need"],["Groceries","need"
 const INC_BASE = ["Salary","Business","Bonus / 13th Month","Investment Income","Interest","Reimbursements","Other Income"];
 let INC_CATS = [...INC_BASE];
 const CASH_GROUPS = ["Cash on Hand","Savings Account","Checking Account","E-Wallet","Time Deposit"];
-const LIQUID = [...CASH_GROUPS,"Funds & UITFs"];
+const LIQUID = [...CASH_GROUPS];
 const INVESTED = ["Funds & UITFs","Stocks","Bonds","Crypto","Retirement & MP2"];
 const MIX_OF = g => CASH_GROUPS.includes(g)?"Cash":g==="Receivable"?"Receivables":INVESTED.includes(g)?"Investments":g==="Business"?"Business":["Real Estate","Vehicles"].includes(g)?"Property & vehicles":"Other";
 const MIX_KEYS = ["Cash","Investments","Business","Receivables","Property & vehicles","Other"];
@@ -1205,7 +1205,7 @@ function renderNW(){
   $("nwHero").innerHTML=`<div class="hero-top"><div><div class="eyebrow">Net worth · end of ${mLabel(m)}${t.carried?" (carried over)":""}</div><div class="big"><small>₱</small>${Math.round(t.net).toLocaleString("en-PH")}</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">${chip(t.net,tp,"vs "+mLabel(p1,true))}${chip(t.net,ty,"vs "+mLabel(shiftMonth(m,-12),true)+" ’"+shiftMonth(m,-12).slice(2,4))}</div></div>${sparkSVG(S.snaps.filter(x=>x.month<=m).sort((a,b)=>a.month.localeCompare(b.month)).map(x=>x.net))}</div>
     <div class="hero-stats"><div><label>Assets</label><b>${peso(t.assets)}</b><small>everything owned</small></div><div><label>Liabilities</label><b>${peso(t.liabilities)}</b><small>cards and loans</small></div>
-    <div><label>Liquid</label><b>${t.known?peso(liq):"–"}</b><small>cash, TDs, funds</small></div><div><label>Invested</label><b>${t.known?peso(inv):"–"}</b><small>stocks, funds, crypto</small></div></div>`;
+    <div><label>Liquid</label><b>${t.known?peso(liq):"–"}</b><small>cash, banks, e-wallets</small></div><div><label>Invested</label><b>${t.known?peso(inv):"–"}</b><small>stocks, funds, crypto</small></div></div>`;
 
   /* what moved */
   const cmp=mapM?priorMap(m):null;
