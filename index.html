@@ -369,7 +369,7 @@ table.bs .num{text-align:right;min-width:104px;font-variant-numeric:tabular-nums
 table.bs th.sel{background:var(--gold);color:#1A1405}
 table.bs th.sel small{display:block;font-size:.6rem;letter-spacing:.06em;opacity:.8}
 table.bs td.sel{background:color-mix(in srgb,var(--gold) 12%,var(--surface))}
-table.bs td.sel small{display:block;font-size:.68rem;font-weight:700;margin-top:2px}
+table.bs td.sel small{display:block;font-size:.68rem;font-weight:700;margin-top:2px;white-space:nowrap}
 .bs-in{width:118px;text-align:right;padding:6px 8px;font-weight:700;font-size:.86rem;border-radius:8px;background:var(--surface);border:1px solid color-mix(in srgb,var(--gold) 55%,var(--line))}
 .bs-in::placeholder{color:var(--faint);font-weight:500}
 tr.bs-net th,tr.bs-net td{font-weight:800;font-size:.92rem;background:var(--royal-soft)}
@@ -1276,7 +1276,7 @@ function renderBS(){
               if(!editable) return `<td class="num sel">–</td>`;
               const pk=prevKnown(c), pv=pk?Number(pk[a.id])||0:null, cur=v===null?null:v;
               const d=cur!==null&&pv!==null?cur-pv:0, good=a.kind==="liability"?d<0:d>0;
-              return `<td class="num sel"><input class="bs-in" inputmode="decimal" data-bal="${esc(a.id)}" aria-label="${esc(a.name)} balance, end of ${mLabel(m)}" value="${cur?Math.round(cur).toLocaleString("en-PH"):""}" placeholder="${carry?fmtN(Number(carry[a.id])||0).replace("–","0"):"0"}">${Math.abs(d)>=1?`<small class="${good?"pos":"neg"}">${d>0?"▲":"▼"} ${fmtN(Math.abs(d))}</small>`:""}</td>`; }).join("")+`</tr>`;
+              return `<td class="num sel"><input class="bs-in" inputmode="decimal" data-bal="${esc(a.id)}" aria-label="${esc(a.name)} balance, end of ${mLabel(m)}" value="${cur?Math.round(cur).toLocaleString("en-PH"):""}" placeholder="${carry?fmtN(Number(carry[a.id])||0).replace("–","0"):"0"}">${Math.abs(d)>=1?`<small class="${good?"pos":"neg"}">${d>0?"▲":"▼"} ${fmtN(Math.abs(d))}${pv>0?` · ${(Math.abs(d)/pv*100).toFixed(1)}%`:""}</small>`:""}</td>`; }).join("")+`</tr>`;
         });
       });
       if(hid.length&&cols.some(c=>secSum(sec,c,hid))) h+=`<tr class="bs-acc closed"><th scope="row" class="acc"><button type="button" class="bs-name" data-nwact="closed"><span>Closed accounts (${hid.length})</span><span class="note">show</span></button></th>${rowVals(c=>{ const v=secSum(sec,c,hid); return v===null?"–":fmtN(v); })}</tr>`;
