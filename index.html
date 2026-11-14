@@ -409,6 +409,7 @@ tr.bs-add th,tr.bs-add td{padding:2px 12px 8px 26px}
   .main{padding-block:18px 110px}
 }
 @media (prefers-reduced-motion:no-preference){.fill{transition:width .5s ease}.panel,.hero{animation:rise .35s ease both}@keyframes rise{from{transform:translateY(6px)}to{transform:none}}}
+.bs-sh{display:block;font-size:11px;font-weight:600;color:#2F55E4;opacity:.85;margin-top:1px;white-space:nowrap}
 </style>
 <style>
 :root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -1262,7 +1263,7 @@ function renderBS(){
       const accs=shownAcc(sec), hid=hiddenAcc(sec), all=[...accs,...hid];
       if(!all.length&&sec.k!=="cash"&&sec.k!=="inv"&&sec.k!=="st") return;
       const col=!!S.nwCollapsed[sec.k];
-      h+=`<tr class="bs-sec"><th scope="row" class="acc"><button type="button" class="bs-tog" data-nwsec="${sec.k}" aria-expanded="${!col}">${col?"▸":"▾"} ${sec.label}</button></th>${rowVals(c=>{ const v=secSum(sec,c,all); return v===null?"–":fmtN(v); })}</tr>`;
+      h+=`<tr class="bs-sec"><th scope="row" class="acc"><button type="button" class="bs-tog" data-nwsec="${sec.k}" aria-expanded="${!col}">${col?"▸":"▾"} ${sec.label}</button></th>${rowVals(c=>{ const v=secSum(sec,c,all); if(v===null) return "–"; const x=tot(c); const sh=kind==="asset"&&x&&x.net>0?`<small class="bs-sh">${(v/x.net*100).toFixed(1)}% of NW</small>`:""; return fmtN(v)+sh; })}</tr>`;
       if(col) return;
       const groups=sec.groups.filter(g=>all.some(a=>a.group===g)), showG=groups.length>1;
       groups.forEach(g=>{
